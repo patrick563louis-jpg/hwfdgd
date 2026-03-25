@@ -1,0 +1,237 @@
+---
+/**
+ * GridAdSystem.astro
+ * Automatically inserts ads between rows in a .posts-grid
+ * Adapts to 1, 2, or 3 columns based on screen size
+ */
+interface Props {
+	slot: string;
+	clientId?: string;
+}
+
+const { 
+	slot, 
+	clientId = import.meta.env.PUBLIC_ADSENSE_ID || 'ca-pub-XXXXXXXXXXXXXXXX' 
+} = Astro.props;
+---
+
+<div class="grid-ad-config" data-slot={slot} data-client={clientId} style="display: none;"></div>
+
+<script>
+	class GridAdSystem {
+		private config: HTMLElement;
+		private grid: HTMLElement | null = null;
+		private slot: string = '';
+		private client: string = '';
+		private resizeTimer: any = null;
+		private observer: MutationObserver | null = null;
+
+		constructor(config: HTMLElement) {
+			this.config = config;
+			this.slot = config.getAttribute('data-slot') || '';
+			this.client = config.getAttribute('data-client') || '';
+			
+			// Find the nearest .posts-grid. 
+			// We look for the previous sibling or parent's sibling
+			this.grid = this.findGrid();
+
+			if (this.grid) {
+				this.init();
+			}
+		}
+
+		private findGrid(): HTMLElement | null {
+			// 1. Try previous element sibling
+			let prev = this.config.previousElementSibling;
+			while (prev) {
+				if (prev.classList.contains('posts-grid')) return prev as HTMLElement;
+				// Also check if it's inside the sibling
+				const inside = prev.querySelector('.posts-grid');
+				if (inside) return inside as HTMLElement;
+				prev = prev.previousElementSibling;
+			}
+
+			// 2. Try parent's previous siblings
+			let parent = this.config.parentElement;
+			while (parent) {
+				let pPrev = parent.previousElementSibling;
+				while (pPrev) {
+					if (pPrev.classList.contains('posts-grid')) return pPrev as HTMLElement;
+					const inside = pPrev.querySelector('.posts-grid');
+					if (inside) return inside as HTMLElement;
+					pPrev = pPrev.previousElementSibling;
+				}
+				parent = parent.parentElement;
+			}
+
+			// 3. Fallback to global search if still not found
+			return document.querySelector('.posts-grid');
+		}
+
+		private init() {
+			// Initial insertion
+			this.updateAds();
+
+			// Handle window resize with debounce
+			window.addEventListener('resize', () => {
+				clearTimeout(this.resizeTimer);
+				this.resizeTimer = setTimeout(() => this.updateAds(), 250);
+			});
+
+			// Handle filtering/search changes via MutationObserver
+			if (this.grid) {
+				this.observer = new MutationObserver((mutations) => {
+					// We only care about style changes (display: none/flex)
+					let shouldUpdate = false;
+					for (const mutation of mutations) {
+						if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+							shouldUpdate = true;
+							break;
+						}
+						if (mutation.type === 'childList') {
+							// If children are added or removed (e.g. by filtering)
+							shouldUpdate = true;
+							break;
+						}
+					}
+					if (shouldUpdate) {
+						this.updateAds();
+					}
+				});
+
+				this.observer.observe(this.grid, { 
+					attributes: true, 
+					childList: true, 
+					subtree: true,
+					attributeFilter: ['style']
+				});
+			}
+
+			// Also listen for custom filter events if any
+			document.addEventListener('filterChanged', () => this.updateAds());
+		}
+
+		private updateAds() {
+			if (!this.grid) return;
+
+			// Get all visible posts (not ads)
+			const wrappers = Array.from(this.grid.querySelectorAll('.post-wrapper')) as HTMLElement[];
+			const visiblePosts = wrappers.filter(el => el.style.display !== 'none' && el.offsetParent !== null);
+
+			if (visiblePosts.length === 0) {
+				// Remove existing ads if no posts are visible
+				this.grid.querySelectorAll('.adaptive-grid-ad').forEach(ad => ad.remove());
+				return;
+			}
+
+			// Calculate posts per row
+			const postsPerRow = this.getPostsPerRow(visiblePosts);
+			
+			// Identify where ads should be
+			const desiredAdIndices: number[] = [];
+			const totalRows = Math.ceil(visiblePosts.length / postsPerRow);
+			for (let r = 1; r <= totalRows; r++) {
+				const idx = Math.min(r * postsPerRow, visiblePosts.length);
+				desiredAdIndices.push(idx);
+			}
+
+			// Check if ads are in the correct places
+			const currentAds = Array.from(this.grid.querySelectorAll('.adaptive-grid-ad'));
+			
+			// Get current ad positions relative to visible posts
+			const currentAdIndices = currentAds.map(ad => {
+				let prev = ad.previousElementSibling;
+				// Skip other ads if any (though there should only be one ad between rows)
+				while (prev && prev.classList.contains('adaptive-grid-ad')) {
+					prev = prev.previousElementSibling;
+				}
+				return prev ? visiblePosts.indexOf(prev as HTMLElement) + 1 : -1;
+			});
+
+			// We compare the number of ads and their relative positions
+			// If anything changed (resizing, filtering, searching), we redo them
+			const needsRefresh = JSON.stringify(currentAdIndices) !== JSON.stringify(desiredAdIndices);
+
+			if (needsRefresh) {
+				// Remove old ads
+				currentAds.forEach(ad => ad.remove());
+
+				// Insert new ads
+				desiredAdIndices.forEach((idx, i) => {
+					const postToInsertAfter = visiblePosts[idx - 1];
+					if (postToInsertAfter) {
+						const adElement = this.createAdElement(i);
+						postToInsertAfter.after(adElement);
+						
+						// Push to AdSense
+						try {
+							((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+						} catch (e) {
+							// console.error('AdSense error:', e);
+						}
+					}
+				});
+			}
+		}
+
+		private getPostsPerRow(visiblePosts: HTMLElement[]): number {
+			if (!this.grid) return 1;
+
+			// Get computed grid template columns
+			const gridStyle = window.getComputedStyle(this.grid);
+			const gridTemplateColumns = gridStyle.getPropertyValue('grid-template-columns');
+			
+			// Count the number of column tracks defined
+			// For repeat(auto-fill, ...), getComputedStyle returns the actual tracks like "300px 300px 300px"
+			const columns = gridTemplateColumns.split(' ').filter(c => c.length > 0).length;
+			
+			return columns || 1;
+		}
+
+		private createAdElement(index: number): HTMLElement {
+			const adDiv = document.createElement('div');
+			adDiv.className = 'adaptive-grid-ad';
+			adDiv.style.gridColumn = '1 / -1';
+			adDiv.style.width = '100%';
+			adDiv.style.margin = '1.5rem 0';
+			adDiv.style.display = 'flex';
+			adDiv.style.justifyContent = 'center';
+			
+			adDiv.innerHTML = `
+				<div style="width: 100%; max-width: 1200px; display: flex; justify-content: center; background: rgba(0,0,0,0.02); border-radius: 8px; overflow: hidden; min-height: 100px;">
+					<ins class="adsbygoogle"
+						style="display:block; width: 100%;"
+						data-ad-client="${this.client}"
+						data-ad-slot="${this.slot}"
+						data-ad-format="auto"
+						data-full-width-responsive="true">
+					</ins>
+				</div>
+			`;
+			
+			return adDiv;
+		}
+	}
+
+	// Initialize when DOM is ready
+	document.addEventListener('DOMContentLoaded', () => {
+		const configs = document.querySelectorAll('.grid-ad-config');
+		configs.forEach(config => {
+			new GridAdSystem(config as HTMLElement);
+		});
+	});
+
+	// Also handle Astro view transitions if used
+	document.addEventListener('astro:page-load', () => {
+		const configs = document.querySelectorAll('.grid-ad-config');
+		configs.forEach(config => {
+			new GridAdSystem(config as HTMLElement);
+		});
+	});
+</script>
+
+<style is:global>
+	.adaptive-grid-ad {
+		grid-column: 1 / -1;
+	}
+</style>

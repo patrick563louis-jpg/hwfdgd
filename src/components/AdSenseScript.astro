@@ -1,0 +1,13 @@
+---
+// AdSense Script Component - Loads AdSense script in head
+const adsenseId = import.meta.env.PUBLIC_ADSENSE_ID || 'ca-pub-XXXXXXXXXXXXXXXX';
+const isProduction = import.meta.env.PROD;
+---
+
+{isProduction && adsenseId !== 'ca-pub-XXXXXXXXXXXXXXXX' && (
+  <script 
+    async 
+    src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseId}`}
+    crossorigin="anonymous"
+  ></script>
+)}

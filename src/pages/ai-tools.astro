@@ -1,0 +1,459 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PostCard from '../components/PostCard.astro';
+import AdSense from '../components/AdSense.astro';
+import GridAdSystem from '../components/GridAdSystem.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('posts');
+const posts = allPosts
+  .filter(p => p.data.category === 'ai-tools')
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// Define all tool type categories
+const toolCategories = [
+  { id: 'all', label: 'الكل', icon: '🤖' },
+  { id: 'ai-assistant', label: 'مساعد ذكي', icon: '💬' },
+  { id: 'image-generation', label: 'توليد الصور', icon: '🎨' },
+  { id: 'video-generation', label: 'توليد الفيديو', icon: '🎬' },
+  { id: 'audio-generation', label: 'توليد الصوت', icon: '🎵' },
+  { id: 'automation', label: 'أتمتة', icon: '⚙️' },
+  { id: 'translation', label: 'ترجمة', icon: '🌐' },
+  { id: 'writing', label: 'كتابة المحتوى', icon: '✍️' },
+  { id: 'coding', label: 'البرمجة', icon: '💻' },
+  { id: 'other', label: 'أخرى', icon: '✨' },
+];
+
+// Count posts per toolType (only for categories that have posts)
+const categoryCounts: Record<string, number> = { all: posts.length };
+posts.forEach(post => {
+  const t = post.data.toolType || 'other';
+  categoryCounts[t] = (categoryCounts[t] || 0) + 1;
+});
+
+// Filter to only show categories that have posts (plus "all")
+const activeCategories = toolCategories.filter(
+  cat => cat.id === 'all' || (categoryCounts[cat.id] && categoryCounts[cat.id] > 0)
+);
+---
+
+<Layout
+	title="أدوات الذكاء الاصطناعي | دليلك الشامل لأفضل برامج AI"
+	description="استكشف دليلنا المتكامل لأقوى أدوات الذكاء الاصطناعي. نوفر مراجعات وتقييمات لأدوات التصميم، الكتابة، البرمجة، والبحث العلمي لتحسين أداء عملك الرقمي."
+>
+	<Header />
+
+	<main>
+		<section class="posts-section">
+			<div class="container">
+				<div class="page-header">
+					<div class="page-title">
+						<h1>أدوات الذكاء الاصطناعي</h1>
+						<p><span id="postCount">{posts.length}</span> مقال</p>
+					</div>
+					<div class="search-box">
+						<input 
+							type="text" 
+							id="searchInput" 
+							placeholder="ابحث في الأدوات..." 
+							aria-label="بحث في الأدوات"
+						/>
+						<svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<circle cx="11" cy="11" r="8"></circle>
+							<path d="m21 21-4.35-4.35"></path>
+						</svg>
+					</div>
+				</div>
+
+				<!-- Horizontal scrollable filter bar -->
+				<div class="filters-wrapper">
+					<div class="filters" id="filtersBar">
+						{activeCategories.map((cat) => (
+							<button
+								class={`filter-btn ${cat.id === 'all' ? 'active' : ''}`}
+								data-tooltype={cat.id}
+								id={`filter-${cat.id}`}
+							>
+								<span class="filter-icon">{cat.icon}</span>
+								<span class="filter-label">{cat.label}</span>
+								{categoryCounts[cat.id] !== undefined && (
+									<span class="filter-count">({categoryCounts[cat.id]})</span>
+								)}
+							</button>
+						))}
+					</div>
+				</div>
+
+				<!-- Ad before posts -->
+				<div class="ad-section">
+					<AdSense slot="7777777777" format="horizontal" />
+				</div>
+
+				{posts.length > 0 ? (
+					<div class="posts-grid" id="postsGrid">
+						{posts.map((post) => (
+							<div class="post-wrapper" data-tooltype={post.data.toolType || 'other'}>
+								<PostCard post={post} />
+							</div>
+						))}
+					</div>
+					<GridAdSystem slot="5555555555" />
+				) : (
+					<div class="empty-state" id="emptyFilterState">
+						<p>لا توجد أدوات في هذه الفئة حتى الآن.</p>
+					</div>
+				)}
+
+				<!-- Bottom Banner Ad -->
+			</div>
+		</section>
+	</main>
+
+	<Footer />
+</Layout>
+
+<script>
+	const filterBtns = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+	const postWrappers = document.querySelectorAll<HTMLElement>('.post-wrapper');
+	const filtersBar = document.getElementById('filtersBar') as HTMLElement;
+	const emptyFilterState = document.getElementById('emptyFilterState') as HTMLElement;
+	const postsGrid = document.getElementById('postsGrid') as HTMLElement;
+	const searchInput = document.getElementById('searchInput') as HTMLInputElement;
+	const postCount = document.getElementById('postCount');
+	let currentToolType = 'all';
+
+	function init() {
+		const params = new URLSearchParams(window.location.search);
+		const filter = params.get('filter') || 'all';
+		const query = params.get('q') || '';
+
+		if (searchInput) {
+			searchInput.value = query;
+		}
+
+		currentToolType = filter;
+		filterBtns.forEach(b => b.classList.remove('active'));
+		const activeBtn = document.getElementById(`filter-${filter}`) as HTMLButtonElement;
+		
+		if (activeBtn) {
+			activeBtn.classList.add('active');
+			// Use a small delay for scroll to ensure DOM is fully rendered
+			setTimeout(() => scrollActiveIntoView(activeBtn), 50);
+		} else {
+			const allBtn = document.getElementById('filter-all') as HTMLButtonElement;
+			if (allBtn) {
+				allBtn.classList.add('active');
+				setTimeout(() => scrollActiveIntoView(allBtn), 50);
+			}
+		}
+
+		applyFilters();
+	}
+
+	function updateURL() {
+		const params = new URLSearchParams();
+		const searchTerm = searchInput?.value.toLowerCase().trim();
+
+		if (currentToolType !== 'all') {
+			params.set('filter', currentToolType);
+		}
+		if (searchTerm) {
+			params.set('q', searchTerm);
+		}
+
+		const queryString = params.toString();
+		const newUrl = `${window.location.pathname}${queryString ? '?' + queryString : ''}`;
+		window.history.pushState({ filter: currentToolType, q: searchTerm }, '', newUrl);
+	}
+
+	window.addEventListener('popstate', (event) => {
+		init();
+	});
+
+	function scrollActiveIntoView(btn: HTMLButtonElement) {
+		if (!btn || !filtersBar) return;
+		const barRect = filtersBar.getBoundingClientRect();
+		const btnRect = btn.getBoundingClientRect();
+		
+		// Calculate the scroll position to center the button
+		const scrollTarget = btn.offsetLeft - (barRect.width / 2) + (btnRect.width / 2);
+		
+		filtersBar.scrollTo({
+			left: scrollTarget,
+			behavior: 'smooth'
+		});
+	}
+
+	// Re-scroll on window resize to keep active button visible
+	let resizeTimeout: any;
+	window.addEventListener('resize', () => {
+		clearTimeout(resizeTimeout);
+		resizeTimeout = setTimeout(() => {
+			const activeBtn = document.querySelector('.filter-btn.active') as HTMLButtonElement;
+			if (activeBtn) scrollActiveIntoView(activeBtn);
+		}, 100);
+	});
+
+	// Filter by tool type
+	filterBtns.forEach(btn => {
+		btn.addEventListener('click', () => {
+			currentToolType = btn.getAttribute('data-tooltype') || 'all';
+			filterBtns.forEach(b => b.classList.remove('active'));
+			btn.classList.add('active');
+			scrollActiveIntoView(btn);
+			applyFilters();
+			updateURL();
+		});
+	});
+
+	// Search functionality
+	searchInput?.addEventListener('input', () => {
+		applyFilters();
+		updateURL();
+	});
+
+	function applyFilters() {
+		const searchTerm = searchInput?.value.toLowerCase().trim() || '';
+		let visibleCount = 0;
+
+		postWrappers.forEach((wrapper) => {
+			const tooltype = wrapper.getAttribute('data-tooltype');
+			const title = wrapper.querySelector('h2')?.textContent?.toLowerCase() || '';
+			const description = wrapper.querySelector('p')?.textContent?.toLowerCase() || '';
+			
+			const matchesToolType = currentToolType === 'all' || tooltype === currentToolType;
+			const matchesSearch = !searchTerm || title.includes(searchTerm) || description.includes(searchTerm);
+
+			if (matchesToolType && matchesSearch) {
+				wrapper.style.display = 'flex';
+				visibleCount++;
+			} else {
+				wrapper.style.display = 'none';
+			}
+		});
+
+		if (postCount) {
+			postCount.textContent = visibleCount.toString();
+		}
+
+		if (visibleCount === 0) {
+			if (postsGrid) postsGrid.style.display = 'none';
+			emptyFilterState.style.display = 'block';
+		} else {
+			if (postsGrid) postsGrid.style.display = 'grid';
+			emptyFilterState.style.display = 'none';
+		}
+	}
+
+	// Initialize on page load
+	init();
+</script>
+
+<style>
+	.posts-section {
+		padding: 3rem 0 5rem;
+	}
+
+	.page-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1.5rem;
+		margin-bottom: 2rem;
+		flex-wrap: wrap;
+	}
+
+	.page-title h1 {
+		font-size: 2rem;
+		margin-bottom: 0.25rem;
+	}
+
+	.page-title p {
+		color: var(--color-text-secondary);
+		font-size: 0.95rem;
+	}
+
+	.search-box {
+		position: relative;
+		flex: 0 1 300px;
+		min-width: 200px;
+	}
+
+	.search-box input {
+		width: 100%;
+		padding: 0.65rem 2.75rem 0.65rem 1rem;
+		border: 2px solid #e2e8f0;
+		border-radius: 0.5rem;
+		font-size: 0.9rem;
+		font-family: inherit;
+		transition: all 0.2s ease;
+		background: white;
+	}
+
+	.search-box input:focus {
+		outline: none;
+		border-color: #0d9488;
+		box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+	}
+
+	.search-box input::placeholder {
+		color: #475569;
+	}
+
+	.search-icon {
+		position: absolute;
+		left: 1rem;
+		top: 50%;
+		transform: translateY(-50%);
+		color: #475569;
+		pointer-events: none;
+	}
+
+	/* Filters wrapper with fade edges */
+	.filters-wrapper {
+		position: relative;
+		margin-bottom: 2.5rem;
+	}
+
+	.filters-wrapper::before,
+	.filters-wrapper::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		width: 48px;
+		z-index: 2;
+		pointer-events: none;
+	}
+
+	.filters-wrapper::before {
+		right: 0;
+		background: linear-gradient(to left, #ffffff 30%, transparent 100%);
+	}
+
+	.filters-wrapper::after {
+		left: 0;
+		background: linear-gradient(to right, #ffffff 30%, transparent 100%);
+	}
+
+	/* Horizontal scrollable filters bar */
+	.filters {
+		display: flex;
+		flex-direction: row;
+		gap: 0.75rem;
+		overflow-x: auto;
+		scroll-behavior: smooth;
+		padding: 0.4rem 0.5rem 0.6rem;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+		direction: rtl;
+	}
+
+	.filters::-webkit-scrollbar {
+		display: none;
+	}
+
+	/* Match exactly the المقالات filter-btn style */
+	.filter-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		padding: 0.6rem 1.25rem;
+		background: #ffffff;
+		border: 2px solid #e2e8f0;
+		border-radius: 0.5rem;
+		font-weight: 600;
+		font-size: 0.875rem;
+		color: #475569;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		font-family: 'Cairo', sans-serif;
+		white-space: nowrap;
+		flex-shrink: 0;
+		direction: rtl;
+		line-height: 1.4;
+	}
+
+	.filter-btn:hover {
+		border-color: #0d9488;
+		color: #0d9488;
+	}
+
+	.filter-btn.active {
+		background: #0d9488;
+		background-image: linear-gradient(135deg, #0d9488 0%, #1e3a8a 100%);
+		border-color: transparent;
+		color: #ffffff !important;
+		box-shadow: 0 4px 14px rgba(13, 148, 136, 0.35);
+	}
+
+	.filter-btn.active .filter-icon,
+	.filter-btn.active .filter-label,
+	.filter-btn.active .filter-count {
+		color: #ffffff;
+	}
+
+	.filter-icon {
+		font-size: 1rem;
+		line-height: 1;
+	}
+
+	.filter-label {
+		font-size: 0.875rem;
+	}
+
+	.filter-count {
+		font-size: 0.8rem;
+		opacity: 0.85;
+	}
+
+	/* Posts grid */
+	.posts-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+		gap: 1.5rem;
+		align-items: stretch;
+	}
+
+	.post-wrapper {
+		display: flex;
+	}
+
+	.ad-section {
+		margin: 2rem 0;
+	}
+
+	.empty-state,
+	.empty-filter-state {
+		text-align: center;
+		padding: 4rem 0;
+		color: var(--color-text-secondary);
+	}
+
+	@media (max-width: 768px) {
+		.posts-section {
+			padding: 2rem 0 4rem;
+		}
+
+		.page-header {
+			flex-direction: column;
+			align-items: stretch;
+		}
+
+		.search-box {
+			flex: 1 1 100%;
+			order: -1;
+		}
+
+		.posts-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.filter-btn {
+			padding: 0.5rem 1rem;
+			font-size: 0.8rem;
+		}
+	}
+</style>

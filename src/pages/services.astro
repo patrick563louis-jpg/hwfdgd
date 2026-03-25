@@ -1,0 +1,206 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PostCard from '../components/PostCard.astro';
+import AdSense from '../components/AdSense.astro';
+import GridAdSystem from '../components/GridAdSystem.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('posts');
+const posts = allPosts
+  .filter(p => p.data.category === 'ai-services')
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<Layout
+	title="خدمات الذكاء الاصطناعي الاحترافية | حلول رقمية متكاملة"
+	description="نقدم خدمات استشارية وتقنية متقدمة في مجال AI. نساعد الشركات والأفراد على دمج الذكاء الاصطناعي في بيئة عملهم، أتمتة العمليات، وتحقيق التفوق الرقمي."
+>
+	<Header />
+
+	<main>
+		<section class="posts-section">
+			<div class="container">
+				<!-- Top Ad -->
+				<AdSense slot="8888888888" format="horizontal" className="page-top-ad" />
+
+				<div class="page-header">
+					<div class="page-title">
+						<h1>خدماتنا</h1>
+						<p><span id="postCount">{posts.length}</span> مقال</p>
+					</div>
+					<div class="search-box">
+						<input 
+							type="text" 
+							id="searchInput" 
+							placeholder="ابحث في الخدمات..." 
+							aria-label="بحث في الخدمات"
+						/>
+						<svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<circle cx="11" cy="11" r="8"></circle>
+							<path d="m21 21-4.35-4.35"></path>
+						</svg>
+					</div>
+				</div>
+
+				{posts.length > 0 ? (
+					<div class="posts-grid" id="postsGrid">
+						{posts.map((post) => (
+							<div class="post-wrapper">
+								<PostCard post={post} />
+							</div>
+						))}
+					</div>
+					<GridAdSystem slot="5555555555" />
+				) : (
+					<div class="empty-state">
+						<p>لا توجد مقالات في هذا القسم حتى الآن.</p>
+					</div>
+				)}
+
+				<!-- Bottom Ad -->
+				<AdSense slot="9999999999" format="horizontal" className="page-bottom-ad" />
+			</div>
+		</section>
+	</main>
+
+	<Footer />
+</Layout>
+
+<script>
+	const searchInput = document.getElementById('searchInput') as HTMLInputElement;
+	const postWrappers = document.querySelectorAll<HTMLElement>('.post-wrapper');
+	const postCount = document.getElementById('postCount');
+
+	// Search functionality
+	searchInput?.addEventListener('input', () => {
+		const searchTerm = searchInput.value.toLowerCase().trim();
+		let visibleCount = 0;
+
+		postWrappers.forEach((wrapper) => {
+			const title = wrapper.querySelector('h2')?.textContent?.toLowerCase() || '';
+			const description = wrapper.querySelector('p')?.textContent?.toLowerCase() || '';
+			
+			const matchesSearch = !searchTerm || title.includes(searchTerm) || description.includes(searchTerm);
+
+			if (matchesSearch) {
+				wrapper.style.display = 'flex';
+				visibleCount++;
+			} else {
+				wrapper.style.display = 'none';
+			}
+		});
+
+		// Update post count
+		if (postCount) {
+			postCount.textContent = visibleCount.toString();
+		}
+	});
+</script>
+
+<style>
+	.page-top-ad {
+		margin-bottom: 2rem;
+	}
+
+	.page-bottom-ad {
+		margin-top: 3rem;
+	}
+
+	.posts-section {
+		padding: 3rem 0 5rem;
+	}
+
+	.page-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1.5rem;
+		margin-bottom: 2.5rem;
+		flex-wrap: wrap;
+	}
+
+	.page-title h1 {
+		font-size: 2rem;
+		margin-bottom: 0.25rem;
+	}
+
+	.page-title p {
+		color: var(--color-text-secondary);
+		font-size: 0.95rem;
+	}
+
+	.search-box {
+		position: relative;
+		flex: 0 1 300px;
+		min-width: 200px;
+	}
+
+	.search-box input {
+		width: 100%;
+		padding: 0.65rem 2.75rem 0.65rem 1rem;
+		border: 2px solid var(--color-border);
+		border-radius: 0.5rem;
+		font-size: 0.9rem;
+		font-family: inherit;
+		transition: all 0.2s ease;
+		background: white;
+	}
+
+	.search-box input:focus {
+		outline: none;
+		border-color: var(--color-primary);
+		box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+	}
+
+	.search-box input::placeholder {
+		color: var(--color-text-secondary);
+	}
+
+	.search-icon {
+		position: absolute;
+		left: 1rem;
+		top: 50%;
+		transform: translateY(-50%);
+		color: var(--color-text-secondary);
+		pointer-events: none;
+	}
+
+	.posts-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+		gap: 1.5rem;
+		align-items: stretch;
+	}
+
+	.post-wrapper {
+		display: flex;
+	}
+
+	.empty-state {
+		text-align: center;
+		padding: 4rem 0;
+		color: var(--color-text-secondary);
+	}
+
+	@media (max-width: 768px) {
+		.posts-section {
+			padding: 2rem 0 4rem;
+		}
+
+		.page-header {
+			flex-direction: column;
+			align-items: stretch;
+		}
+
+		.search-box {
+			flex: 1 1 100%;
+			order: -1;
+		}
+
+		.posts-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

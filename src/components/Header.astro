@@ -1,0 +1,207 @@
+---
+import logoImg from '../assets/aiservs.png';
+const currentPath = Astro.url.pathname;
+---
+
+<header>
+	<nav class="navbar">
+		<div class="container">
+			<div class="nav-wrapper">
+				<a href="/posts" class="logo">
+					<img src={logoImg.src} alt="خدمات الذكاء الاصطناعي" width="40" height="40" style="border-radius:8px;object-fit:contain;" />
+					<span class="logo-text">خدمات الذكاء الاصطناعي</span>
+				</a>
+
+				<button class="mobile-toggle" id="mobileToggle" aria-label="القائمة">
+					<span></span>
+					<span></span>
+					<span></span>
+				</button>
+
+				<ul class="nav-links" id="navLinks">
+					<li><a href="/posts" class={currentPath.startsWith('/posts') ? 'active' : ''}>المقالات</a></li>
+					<li><a href="/money-ai" class={currentPath === '/money-ai' ? 'active' : ''}>Money Ai</a></li>
+					<li><a href="/apps" class={currentPath === '/apps' ? 'active' : ''}>تطبيقاتنا</a></li>
+					<li><a href="/ai-tools" class={currentPath === '/ai-tools' ? 'active' : ''}>أدوات الذكاء الاصطناعي</a></li>
+					<li><a href="/services" class={currentPath === '/services' ? 'active' : ''}>خدماتنا</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+</header>
+
+<script>
+	const mobileToggle = document.getElementById('mobileToggle');
+	const navLinks = document.getElementById('navLinks');
+
+	mobileToggle?.addEventListener('click', () => {
+		navLinks?.classList.toggle('active');
+		mobileToggle?.classList.toggle('active');
+	});
+
+	document.addEventListener('click', (e) => {
+		const target = e.target as HTMLElement;
+		if (!target.closest('.navbar')) {
+			navLinks?.classList.remove('active');
+			mobileToggle?.classList.remove('active');
+		}
+	});
+</script>
+
+<style>
+	header {
+		position: sticky;
+		top: 0;
+		z-index: 1000;
+		background: rgba(255, 255, 255, 0.95);
+		backdrop-filter: blur(10px);
+		border-bottom: 1px solid var(--color-border);
+		box-shadow: var(--shadow-sm);
+	}
+
+	.navbar {
+		padding: 1rem 0;
+	}
+
+	.nav-wrapper {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 2rem;
+	}
+
+	.logo {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		font-size: 1.25rem;
+		font-weight: 700;
+		color: var(--color-text);
+		transition: transform 0.3s ease;
+	}
+
+	.logo:hover {
+		transform: scale(1.05);
+		color: var(--color-text);
+	}
+
+	.logo-text {
+		background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+	}
+
+	.mobile-toggle {
+		display: none;
+		flex-direction: column;
+		gap: 4px;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 0.5rem;
+	}
+
+	.mobile-toggle span {
+		display: block;
+		width: 25px;
+		height: 3px;
+		background: var(--color-text);
+		transition: all 0.3s ease;
+		border-radius: 3px;
+	}
+
+	.mobile-toggle.active span:nth-child(1) {
+		transform: rotate(45deg) translate(5px, 5px);
+	}
+
+	.mobile-toggle.active span:nth-child(2) {
+		opacity: 0;
+	}
+
+	.mobile-toggle.active span:nth-child(3) {
+		transform: rotate(-45deg) translate(7px, -6px);
+	}
+
+	.nav-links {
+		display: flex;
+		align-items: center;
+		gap: 2rem;
+		list-style: none;
+		margin: 0;
+	}
+
+	.nav-links a {
+		font-weight: 600;
+		color: var(--color-text-secondary);
+		transition: color 0.3s ease;
+		position: relative;
+		padding: 0.5rem 0;
+	}
+
+	.nav-links a:not(.btn):hover,
+	.nav-links a.active {
+		color: var(--color-primary);
+	}
+
+	.nav-links a:not(.btn).active::after {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		width: 100%;
+		height: 2px;
+		background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+		border-radius: 2px;
+	}
+
+	@media (max-width: 768px) {
+		.mobile-toggle {
+			display: flex;
+		}
+
+		.nav-links {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			right: 0;
+			background: white;
+			flex-direction: column;
+			gap: 0;
+			padding: 1rem;
+			border-bottom: 1px solid var(--color-border);
+			box-shadow: var(--shadow-lg);
+			transform: translateY(-100%);
+			opacity: 0;
+			pointer-events: none;
+			transition: all 0.3s ease;
+		}
+
+		.nav-links.active {
+			transform: translateY(0);
+			opacity: 1;
+			pointer-events: all;
+		}
+
+		.nav-links li {
+			width: 100%;
+			text-align: center;
+			padding: 0.75rem 0;
+			border-bottom: 1px solid var(--color-border);
+		}
+
+		.nav-links li:last-child {
+			border-bottom: none;
+			padding-top: 1rem;
+		}
+
+		.nav-links a:not(.btn) {
+			display: block;
+			width: 100%;
+		}
+
+		.nav-links .btn {
+			width: 100%;
+		}
+	}
+</style>

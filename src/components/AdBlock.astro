@@ -1,0 +1,13 @@
+---
+import AdSense from './AdSense.astro';
+
+interface Props {
+	slot: string;
+}
+
+const { slot = '5555555555' } = Astro.props;
+---
+
+<div class="inline-ad-block" style="margin: 2rem 0; display: flex; justify-content: center;">
+	<AdSense slot={slot} format="auto" />
+</div>

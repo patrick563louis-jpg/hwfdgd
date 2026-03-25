@@ -1,0 +1,66 @@
+---
+// In-Article Ad Component - Optimized for content flow
+interface Props {
+  slot?: string;
+  className?: string;
+}
+
+const { slot = '1234567890', className = '' } = Astro.props;
+---
+
+<div class={`in-article-ad ${className}`}>
+  <div class="ad-label">إعلان</div>
+  <div class="ad-wrapper">
+    <slot>
+      <div class="default-ad">
+        <ins class="adsbygoogle"
+             style="display:block; text-align:center;"
+             data-ad-layout="in-article"
+             data-ad-format="fluid"
+             data-ad-client={import.meta.env.PUBLIC_ADSENSE_ID || 'ca-pub-XXXXXXXXXXXXXXXX'}
+             data-ad-slot={slot}>
+        </ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
+    </slot>
+  </div>
+</div>
+
+<style>
+  .in-article-ad {
+    margin: 30px 0;
+    padding: 20px 0;
+    border-top: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .ad-label {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+  }
+
+  .ad-wrapper {
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .default-ad {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    .in-article-ad {
+      margin: 20px -20px;
+      padding: 15px 20px;
+    }
+  }
+</style>

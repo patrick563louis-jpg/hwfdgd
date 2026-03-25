@@ -1,0 +1,71 @@
+---
+// AdSense Component - Flexible ad placement
+interface Props {
+  slot: string;
+  format?: 'auto' | 'rectangle' | 'vertical' | 'horizontal';
+  responsive?: boolean;
+  className?: string;
+}
+
+const { slot, format = 'auto', responsive = true, className = '' } = Astro.props;
+
+// Get AdSense ID from environment variable
+const adsenseId = import.meta.env.PUBLIC_ADSENSE_ID || 'ca-pub-XXXXXXXXXXXXXXXX';
+const isProduction = import.meta.env.PROD;
+---
+
+{isProduction && adsenseId !== 'ca-pub-XXXXXXXXXXXXXXXX' ? (
+  <div class={`adsense-container ${className}`}>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client={adsenseId}
+         data-ad-slot={slot}
+         data-ad-format={format}
+         data-full-width-responsive={responsive.toString()}>
+    </ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+) : (
+  <div class={`adsense-placeholder ${className}`}>
+    <div class="ad-demo">
+      <p>📢 إعلان هنا</p>
+      <small>Ad Slot: {slot}</small>
+    </div>
+  </div>
+)}
+
+<style>
+  .adsense-container {
+    margin: 20px 0;
+    text-align: center;
+  }
+
+  .adsense-placeholder {
+    margin: 20px 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .ad-demo {
+    padding: 40px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    color: white;
+  }
+
+  .ad-demo p {
+    margin: 0 0 10px 0;
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+
+  .ad-demo small {
+    opacity: 0.8;
+    font-size: 0.9em;
+  }
+</style>

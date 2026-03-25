@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: http://khadamatelai.xyz/sitemap-index.xml
