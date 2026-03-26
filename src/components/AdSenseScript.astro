@@ -5,9 +5,36 @@ const isProduction = import.meta.env.PROD;
 ---
 
 {isProduction && adsenseId !== 'ca-pub-XXXXXXXXXXXXXXXX' && (
-  <script 
-    async 
-    src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseId}`}
-    crossorigin="anonymous"
-  ></script>
+  <script is:inline define:vars={{ adsenseId }}>
+    function loadAdSense() {
+      const script = document.createElement('script');
+      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseId}`;
+      script.async = true;
+      script.crossOrigin = 'anonymous';
+      document.head.appendChild(script);
+    }
+
+    // Load AdSense after a delay or on user interaction
+    let adsLoaded = false;
+    function triggerAdSense() {
+      if (adsLoaded) return;
+      adsLoaded = true;
+      
+      // Cleanup listeners
+      window.removeEventListener('scroll', triggerAdSense);
+      window.removeEventListener('mousemove', triggerAdSense);
+      window.removeEventListener('touchstart', triggerAdSense);
+      
+      // Load the script
+      loadAdSense();
+    }
+
+    // Set a timeout as fallback (3 seconds)
+    setTimeout(triggerAdSense, 3000);
+
+    // Also load on user interaction
+    window.addEventListener('scroll', triggerAdSense, { passive: true });
+    window.addEventListener('mousemove', triggerAdSense, { passive: true });
+    window.addEventListener('touchstart', triggerAdSense, { passive: true });
+  </script>
 )}

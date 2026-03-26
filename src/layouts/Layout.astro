@@ -10,7 +10,7 @@ const {
 	title = 'خدمات الذكاء الاصطناعي | المنصة العربية الشاملة لتقنيات AI',
 	description = 'خدمات الذكاء الاصطناعي هي وجهتك الأولى لاكتشاف وتطبيق أحدث تقنيات AI في العالم العربي. نوفر أدوات ذكية، شروحات تقنية، واستراتيجيات مبتكرة لزيادة الإنتاجية وتحقيق النجاح الرقمي.',
 	image = '/media/images/general-ai.jpg',
-	canonicalURL = Astro.site ? new URL(Astro.url.pathname, Astro.site) : new URL(Astro.url.pathname, 'http://khadamatelai.xyz'),
+	canonicalURL = Astro.site ? new URL(Astro.url.pathname, Astro.site) : new URL(Astro.url.pathname, 'https://khadamatelai.xyz'),
 } = Astro.props;
 ---
 
@@ -22,6 +22,12 @@ const {
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		
+		<!-- Performance Optimization: Preconnect to external domains -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link rel="preconnect" href="https://pagead2.googlesyndication.com">
+		<link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
+
 		<!-- Primary Meta Tags -->
 		<title>{title}</title>
 		<meta name="title" content={title} />
@@ -37,10 +43,10 @@ const {
 				"@type": "WebSite",
 				"name": "خدمات الذكاء الاصطناعي",
 				"alternateName": "AI Services",
-				"url": "http://khadamatelai.xyz",
+				"url": "https://khadamatelai.xyz",
 				"potentialAction": {
 					"@type": "SearchAction",
-					"target": "http://khadamatelai.xyz/posts?q={search_term_string}",
+					"target": "https://khadamatelai.xyz/posts?q={search_term_string}",
 					"query-input": "required name=search_term_string"
 				}
 			}
@@ -50,8 +56,8 @@ const {
 				"@context": "https://schema.org",
 				"@type": "Organization",
 				"name": "خدمات الذكاء الاصطناعي",
-				"url": "http://khadamatelai.xyz",
-				"logo": "http://khadamatelai.xyz/favicon.svg",
+				"url": "https://khadamatelai.xyz",
+				"logo": "https://khadamatelai.xyz/favicon.svg",
 				"sameAs": [
 					"https://www.youtube.com/@khadamatelai",
 					"https://t.me/khadamatelai"
@@ -76,7 +82,10 @@ const {
 		<!-- Fonts -->
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+		<noscript>
+			<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+		</noscript>
 		
 		<slot name="head" />
 		<AdSenseScript />

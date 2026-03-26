@@ -45,7 +45,7 @@ const thumbnail = post.data.image || firstImage || null;
 <article class="post-card">
   {thumbnail && (
     <a href={`/posts/${post.slug}`} class="post-thumbnail">
-      <img src={thumbnail} alt={post.data.title} loading="lazy" />
+      <img src={thumbnail} alt={post.data.title} loading="lazy" decoding="async" />
     </a>
   )}
   <div class="post-body">
