@@ -27,14 +27,10 @@ const commonSchema = (category: string, defaultImage: string) => ({
 });
 
 export default config({
-  storage: import.meta.env.PROD 
-    ? {
-        kind: 'github',
-        repo: 'patrick563louis-jpg/srvsblg',
-      }
-    : {
-        kind: 'local',
-      },
+  storage: {
+    kind: 'github',
+    repo: 'patrick563louis-jpg/srvsblg',
+  },
   collections: {
     ai_tools: collection({
       label: 'أدوات الذكاء الاصطناعي',
