@@ -42,7 +42,7 @@ Generate an image of an anime male character sitting behind a laptop in his stud
 
 ## الروابط المستخدمة في الفيديو
 
-- <a href="https://t.me/khadamatelai/4" target="_blank">تحميل الفم المتحرك  </a>  
+- <a href="https://t.me/khadamatelai/5" target="_blank">تحميل الفم المتحرك</a>  
 - <a href="https://playgroundai.com/" target="_blank">إنشاء صور الشخصية بالذكاء الاصطناعي</a>  
 - <a href="https://www.photopea.com/" target="_blank">حذف الفم من الصورة</a>  
 - <a href="https://www.capcut.com/s/Zs86J9Tjb/" target="_blank">برنامج المونتاج CapCut</a>  

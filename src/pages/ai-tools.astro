@@ -101,10 +101,19 @@ const activeCategories = toolCategories.filter(
 					</div>
 					<GridAdSystem slot="5555555555" />
 				) : (
-					<div class="empty-state" id="emptyFilterState">
-						<p>لا توجد أدوات في هذه الفئة حتى الآن.</p>
+					<div class="empty-state">
+						<p>لا توجد مقالات في هذا القسم حتى الآن.</p>
 					</div>
 				)}
+
+				<!-- Ad after posts -->
+				<div class="ad-section">
+					<AdSense slot="9999999999" format="horizontal" />
+				</div>
+
+				<div class="empty-filter-state" id="emptyFilterState" style="display:none;">
+					<p>لا توجد أدوات في هذه الفئة حتى الآن.</p>
+				</div>
 
 				<!-- Bottom Banner Ad -->
 			</div>

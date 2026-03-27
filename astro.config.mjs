@@ -9,7 +9,7 @@ import markdoc from '@astrojs/markdoc';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://www.khadamatelai.xyz',
+  site: 'https://khadamatelai.xyz',
   adapter: vercel(),
   integrations: [mdx(), sitemap(), react(), keystatic(), markdoc()],
   vite: {
