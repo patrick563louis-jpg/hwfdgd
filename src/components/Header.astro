@@ -1,6 +1,6 @@
 ---
 import logoImg from '../assets/aiservs.png';
-const currentPath = Astro.url.pathname;
+const currentPath = Astro.url.pathname.replace(/\/$/, "");
 ---
 
 <header>
@@ -19,11 +19,12 @@ const currentPath = Astro.url.pathname;
 				</button>
 
 				<ul class="nav-links" id="navLinks">
+					<li><a href="/" class={currentPath === '' ? 'active' : ''}>الرئيسية</a></li>
 					<li><a href="/posts" class={currentPath.startsWith('/posts') ? 'active' : ''}>المقالات</a></li>
-					<li><a href="/money-ai" class={currentPath === '/money-ai' ? 'active' : ''}>Money Ai</a></li>
-					<li><a href="/apps" class={currentPath === '/apps' ? 'active' : ''}>تطبيقاتنا</a></li>
-					<li><a href="/ai-tools" class={currentPath === '/ai-tools' ? 'active' : ''}>أدوات الذكاء الاصطناعي</a></li>
-					<li><a href="/services" class={currentPath === '/services' ? 'active' : ''}>خدماتنا</a></li>
+					<li><a href="/money-ai" class={currentPath.startsWith('/money-ai') ? 'active' : ''}>Money Ai</a></li>
+					<li><a href="/apps" class={currentPath.startsWith('/apps') ? 'active' : ''}>تطبيقاتنا</a></li>
+					<li><a href="/ai-tools" class={currentPath.startsWith('/ai-tools') ? 'active' : ''}>أدوات الذكاء الاصطناعي</a></li>
+					<li><a href="/services" class={currentPath.startsWith('/services') ? 'active' : ''}>خدماتنا</a></li>
 				</ul>
 			</div>
 		</div>
@@ -134,22 +135,25 @@ const currentPath = Astro.url.pathname;
 	.nav-links a {
 		font-weight: 600;
 		color: var(--color-text-secondary);
-		transition: color 0.3s ease;
+		transition: all 0.3s ease;
 		position: relative;
-		padding: 0.5rem 0;
+		padding: 0.5rem 1rem;
+		border-radius: 0.5rem;
+		display: block;
 	}
 
 	.nav-links a:not(.btn):hover,
 	.nav-links a.active {
 		color: var(--color-primary);
+		background: var(--color-bg-secondary);
 	}
 
 	.nav-links a:not(.btn).active::after {
 		content: '';
 		position: absolute;
-		bottom: 0;
-		right: 0;
-		width: 100%;
+		bottom: 0.5rem;
+		right: 1rem;
+		left: 1rem;
 		height: 2px;
 		background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
 		border-radius: 2px;
