@@ -7,7 +7,7 @@ const currentPath = Astro.url.pathname;
 	<nav class="navbar">
 		<div class="container">
 			<div class="nav-wrapper">
-				<a href="/" class="logo">
+				<a href="/posts" class="logo">
 					<img src={logoImg.src} alt="خدمات الذكاء الاصطناعي" width="40" height="40" style="border-radius:8px;object-fit:contain;" />
 					<span class="logo-text">خدمات الذكاء الاصطناعي</span>
 				</a>
@@ -19,7 +19,7 @@ const currentPath = Astro.url.pathname;
 				</button>
 
 				<ul class="nav-links" id="navLinks">
-					<li><a href="/" class={currentPath === '/' || currentPath.startsWith('/posts/') ? 'active' : ''}>المقالات</a></li>
+					<li><a href="/posts" class={currentPath.startsWith('/posts') ? 'active' : ''}>المقالات</a></li>
 					<li><a href="/money-ai" class={currentPath === '/money-ai' ? 'active' : ''}>Money Ai</a></li>
 					<li><a href="/apps" class={currentPath === '/apps' ? 'active' : ''}>تطبيقاتنا</a></li>
 					<li><a href="/ai-tools" class={currentPath === '/ai-tools' ? 'active' : ''}>أدوات الذكاء الاصطناعي</a></li>
