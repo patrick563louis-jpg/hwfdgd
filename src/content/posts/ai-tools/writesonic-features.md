@@ -1,7 +1,7 @@
 ---
 title: "Writesonic: منصة متكاملة لصناعة المحتوى بالذكاء الاصطناعي"
 description: "اكتشف Writesonic وأداة Chatsonic التي تعد منافساً قوياً لـ ChatGPT."
-pubDate: 2026-03-17
+pubDate: 2026-03-27
 category: "ai-tools"
 toolType: "writing"
 author: "فريق الذكاء الاصطناعي"
