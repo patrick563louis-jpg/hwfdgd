@@ -65,7 +65,12 @@ const thumbnail = post.data.image || firstImage || null;
           <line x1="8" y1="2" x2="8" y2="6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           <line x1="3" y1="10" x2="21" y2="10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        {post.data.pubDate.toLocaleDateString('en-GB')}
+        {post.data.pubDate.toLocaleDateString('en-GB', {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric',
+          numberingSystem: 'latn'
+        })}
       </span>
       {post.data.author && (
         <span class="post-author">
