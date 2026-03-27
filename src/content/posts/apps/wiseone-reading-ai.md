@@ -1,7 +1,7 @@
 ---
 title: "Wiseone: رفيقك الذكي للقراءة والبحث عبر الإنترنت"
 description: "تعرف على Wiseone، الإضافة التي تساعدك على فهم المقالات المعقدة والتحقق من الحقائق."
-pubDate: 2026-03-23
+pubDate: 2026-03-27
 category: "apps"
 appType: "other"
 author: "فريق التطوير"
