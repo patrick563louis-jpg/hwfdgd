@@ -30,7 +30,7 @@ export default config({
   storage: import.meta.env.PROD 
     ? {
         kind: 'github',
-        repo: 'YOUR_GITHUB_USERNAME/YOUR_REPO_NAME', // قم بتغيير هذا بعد ربط GitHub
+        repo: 'patrick563louis-jpg/srvsblg',
       }
     : {
         kind: 'local',
