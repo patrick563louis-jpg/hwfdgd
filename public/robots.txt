@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
 
+<<<<<<< HEAD
 Sitemap: http://khadamatelai.xyz/sitemap-index.xml
+=======
+Sitemap: https://khadamatelai.xyz/sitemap-index.xml
+>>>>>>> bb7beb0 (SEO optimization: Fix protocol mismatch in sitemap and schema markup)
