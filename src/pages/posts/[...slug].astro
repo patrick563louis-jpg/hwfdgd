@@ -9,6 +9,8 @@ import GridAdSystem from '../../components/GridAdSystem.astro';
 import AdBlock from '../../components/AdBlock.astro';
 import { getCollection } from 'astro:content';
 
+export const prerender = true;
+
 export async function getStaticPaths() {
 	const posts = await getCollection('posts');
 	return posts.map(post => ({
