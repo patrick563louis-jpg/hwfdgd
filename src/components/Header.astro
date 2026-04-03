@@ -19,11 +19,11 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 				</button>
 
 				<ul class="nav-links" id="navLinks">
-					<li><a href="/" class={currentPath === '/' ? 'active' : ''}>الرئيسية</a></li>
-					<li><a href="/money-ai" class={currentPath === '/money-ai' ? 'active' : ''}>Money Ai</a></li>
-					<li><a href="/apps" class={currentPath === '/apps' ? 'active' : ''}>منتجاتنا</a></li>
-					<li><a href="/ai-tools" class={currentPath === '/ai-tools' ? 'active' : ''}>أدوات الذكاء الاصطناعي</a></li>
-					<li><a href="/services" class={currentPath === '/services' ? 'active' : ''}>خدماتنا</a></li>
+					<li><a href="/" class={(currentPath === '/' || (currentPath.startsWith('/posts') && currentPath.includes('/general'))) ? 'active' : ''}>الرئيسية</a></li>
+					<li><a href="/money-ai" class={(currentPath === '/money-ai' || currentPath.includes('/money-ai')) ? 'active' : ''}>Money Ai</a></li>
+					<li><a href="/apps" class={(currentPath === '/apps' || currentPath.includes('/apps')) ? 'active' : ''}>منتجاتنا</a></li>
+					<li><a href="/ai-tools" class={(currentPath === '/ai-tools' || currentPath.includes('/ai-tools')) ? 'active' : ''}>أدوات الذكاء الاصطناعي</a></li>
+					<li><a href="/services" class={(currentPath === '/services' || currentPath.includes('/ai-services')) ? 'active' : ''}>خدماتنا</a></li>
 				</ul>
 			</div>
 		</div>
