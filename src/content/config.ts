@@ -19,10 +19,10 @@ const postsCollection = defineCollection({
       'other'
     ]).optional(),
     appType: z.enum([
-      'mobile-app',
-      'desktop-app',
-      'website',
-      'telegram-bot',
+      'software',
+      'ebooks',
+      'design-templates',
+      'digital-bundles',
       'other'
     ]).optional(),
     author: z.string().optional(),

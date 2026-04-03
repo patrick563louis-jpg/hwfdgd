@@ -14,11 +14,11 @@ const posts = allPosts
 
 // Define all app type categories
 const appCategories = [
-  { id: 'all', label: 'الكل', icon: '📱' },
-  { id: 'mobile-app', label: 'تطبيقات الموبايل', icon: '📲' },
-  { id: 'desktop-app', label: 'تطبيقات الديسكتوب', icon: '🖥️' },
-  { id: 'website', label: 'مواقع الويب', icon: '🌐' },
-  { id: 'telegram-bot', label: 'بوتات تيليغرام', icon: '✈️' },
+  { id: 'all', label: 'الكل', icon: '�' },
+  { id: 'software', label: 'برامج', icon: '�' },
+  { id: 'ebooks', label: 'كتب إلكترونية', icon: '�' },
+  { id: 'design-templates', label: 'قوالب تصميم', icon: '�' },
+  { id: 'digital-bundles', label: 'حزم رقمية', icon: '📦' },
   { id: 'other', label: 'أخرى', icon: '✨' },
 ];
 
@@ -36,8 +36,8 @@ const activeCategories = appCategories.filter(
 ---
 
 <Layout
-	title="تطبيقات الذكاء الاصطناعي | حلول تقنية ذكية لأتمتة أعمالك"
-	description="استكشف تطبيقاتنا المبتكرة المدعومة بالذكاء الاصطناعي. حلول ذكية مصممة لتبسيط حياتك اليومية، زيادة الإنتاجية، وتحويل العمليات التقليدية إلى أنظمة مأتمتة."
+	title="منتجات الذكاء الاصطناعي | حلول تقنية ذكية لأتمتة أعمالك"
+	description="استكشف منتجاتنا المبتكرة المدعومة بالذكاء الاصطناعي. حلول ذكية مصممة لتبسيط حياتك اليومية، زيادة الإنتاجية، وتحويل العمليات التقليدية إلى أنظمة مأتمتة."
 >
 	<Header />
 
@@ -51,15 +51,15 @@ const activeCategories = appCategories.filter(
 			<div class="container">
 				<div class="page-header">
 					<div class="page-title">
-						<h1>تطبيقاتنا</h1>
+						<h1>منتجاتنا</h1>
 						<p><span id="postCount">{posts.length}</span> مقال</p>
 					</div>
 					<div class="search-box">
 						<input 
 							type="text" 
 							id="searchInput" 
-							placeholder="ابحث في التطبيقات..." 
-							aria-label="بحث في التطبيقات"
+							placeholder="ابحث في المنتجات..." 
+							aria-label="بحث في المنتجات"
 						/>
 						<svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 							<circle cx="11" cy="11" r="8"></circle>

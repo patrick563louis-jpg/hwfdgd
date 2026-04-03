@@ -62,7 +62,7 @@ export default config({
       },
     }),
     apps: collection({
-      label: 'تطبيقاتنا',
+      label: 'منتجاتنا',
       path: 'src/content/posts/apps/*',
       format: { contentField: 'content' },
       slugField: 'title',
@@ -71,8 +71,10 @@ export default config({
         appType: fields.select({
           label: 'نوع التطبيق',
           options: [
-            { label: 'موقع ويب', value: 'website' },
-            { label: 'تطبيق موبايل', value: 'mobile' },
+            { label: 'برامج', value: 'software' },
+            { label: 'كتب إلكترونية', value: 'ebooks' },
+            { label: 'قوالب تصميم', value: 'design-templates' },
+            { label: 'حزم رقمية', value: 'digital-bundles' },
             { label: 'أخرى', value: 'other' },
           ],
           defaultValue: 'other',
