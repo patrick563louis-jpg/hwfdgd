@@ -43,6 +43,24 @@ const activeCategories = toolCategories.filter(
 	title="أدوات الذكاء الاصطناعي | دليلك الشامل لأفضل برامج AI"
 	description="استكشف دليلنا المتكامل لأقوى أدوات الذكاء الاصطناعي. نوفر مراجعات وتقييمات لأدوات التصميم، الكتابة، البرمجة، والبحث العلمي لتحسين أداء عملك الرقمي."
 >
+	<script type="application/ld+json" slot="head" set:html={JSON.stringify({
+		"@context": "https://schema.org",
+		"@type": "BreadcrumbList",
+		"itemListElement": [
+			{
+				"@type": "ListItem",
+				"position": 1,
+				"name": "الرئيسية",
+				"item": "https://khadamatelai.xyz"
+			},
+			{
+				"@type": "ListItem",
+				"position": 2,
+				"name": "أدوات الذكاء الاصطناعي",
+				"item": "https://khadamatelai.xyz/ai-tools"
+			}
+		]
+	})} />
 	<Header />
 
 	<main>

@@ -14,10 +14,10 @@ const posts = allPosts
 
 // Define all app type categories
 const appCategories = [
-  { id: 'all', label: 'الكل', icon: '�' },
-  { id: 'software', label: 'برامج', icon: '�' },
-  { id: 'ebooks', label: 'كتب إلكترونية', icon: '�' },
-  { id: 'design-templates', label: 'قوالب تصميم', icon: '�' },
+  { id: 'all', label: 'الكل', icon: '🛒' },
+  { id: 'software', label: 'برامج', icon: '💻' },
+  { id: 'ebooks', label: 'كتب إلكترونية', icon: '📚' },
+  { id: 'design-templates', label: 'قوالب تصميم', icon: '🎨' },
   { id: 'digital-bundles', label: 'حزم رقمية', icon: '📦' },
   { id: 'other', label: 'أخرى', icon: '✨' },
 ];
@@ -39,6 +39,24 @@ const activeCategories = appCategories.filter(
 	title="منتجات الذكاء الاصطناعي | حلول تقنية ذكية لأتمتة أعمالك"
 	description="استكشف منتجاتنا المبتكرة المدعومة بالذكاء الاصطناعي. حلول ذكية مصممة لتبسيط حياتك اليومية، زيادة الإنتاجية، وتحويل العمليات التقليدية إلى أنظمة مأتمتة."
 >
+	<script type="application/ld+json" slot="head" set:html={JSON.stringify({
+		"@context": "https://schema.org",
+		"@type": "BreadcrumbList",
+		"itemListElement": [
+			{
+				"@type": "ListItem",
+				"position": 1,
+				"name": "الرئيسية",
+				"item": "https://khadamatelai.xyz"
+			},
+			{
+				"@type": "ListItem",
+				"position": 2,
+				"name": "المنتجات",
+				"item": "https://khadamatelai.xyz/apps"
+			}
+		]
+	})} />
 	<Header />
 
 	<main>
